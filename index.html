@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
+  <title>Планирование мероприятий</title>
+  <script src="jquery-3.5.1.min.js"></script>
+  <style>
+    body {
+        color: #fff; /* Цвет текста */
+    }
+    header {
+        background: linear-gradient(to top, #ffffff, #3366FF);
+        padding: 10px;
+        width:100%;
+        height:166px;
+        text-align: center;
+        
+    }
+    .sitename {
+        font-family: 'Rubik Mono One', sans-serif; 
+        font-size: 50px;
+        font-weight: bold; 
+        font-style: normal;
+        color: rgba(0, 5, 56,.6)
+    }
+    @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
+    .menu-main {
+        list-style: none;
+        margin: 40px 0 5px;
+        padding: 25px 0 5px;
+        text-align: center;
+    }
+    .menu-main li {display: inline-block;}
+    .menu-main li:after {
+        content: "|";
+        color: #606060;
+        display: inline-block;
+        vertical-align:top;
+    }
+    .menu-main li:last-child:after {content: none;}
+    .menu-main a {
+        text-decoration: none;
+        font-family: 'Ubuntu Condensed', sans-serif;
+        letter-spacing: 2px;
+        position: relative;
+        padding-bottom: 5px;
+        margin: 0 34px 0 30px;
+        font-size: 17px;
+        text-transform: uppercase;
+        display: inline-block;
+        transition: color .2s;
+        font-weight: bold;
+    }
+    .menu-main a, .menu-main a:visited {color: #9d999d;}
+    .menu-main a.current, .menu-main a:hover{color: #2d538d;}
+    .menu-main a:before,
+    .menu-main a:after {
+        content: "";
+        position: absolute;
+        height: 4px;
+        top: auto;
+        right: 50%;
+        bottom: -5px;
+        left: 50%;
+        background: #2d538d;
+        transition: .3s;
+    }
+    .menu-main a:hover:before, .menu-main .current:before {left: 0;}
+    .menu-main a:hover:after, .menu-main .current:after {right: 0;}   
+    @media (max-width: 550px) {
+        .menu-main {padding-top: 0;}
+        .menu-main li {display: block;}
+        .menu-main li:after {content: none;}
+        .menu-main a {
+            padding: 25px 0 20px; 
+            margin: 0 30px;
+        }
+    }
+    .spinningTextG{
+        transform:rotate(120deg);
+        color:rgba(0, 5, 56,.6);
+        animation-fill-mode: forwards;
+        text-decoration:none;
+        animation-name:bounce_spinningTextG;
+        animation-duration:3s;
+        animation-iteration-count:1;
+        animation-direction:normal;
+        animation-delay: 2s;
+    }
+        @keyframes bounce_spinningTextG{
+        0%{
+            transform:scale(1) rotate(120deg);
+            color:rgba(0, 5, 56,.6);
+        }
+        100%{
+            
+            transform:scale(1) rotate(360deg);
+            color:rgba(0, 5, 56,.6);
+        }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script> 
+ </head>
+ <body>
+    <script type='text/javascript'>
+
+            function get_list(){
+                $.ajax({
+                    url: "server.php",
+                    type: "POST",
+                    data:{
+                        variant: 'get_list'
+                    },
+                    success:function(res){
+                        $('#res').html(res);
+                    }
+                });
+            }
+
+           function addEvent(){
+                var data=$('#myform').serialize();
+                $.ajax({
+                    url: "server.php",
+                    type: "POST",
+                    data: data+'&variant=add_event',
+                    success:function(res){
+                        alert('Запись успешно добавлена.')
+                        console.log( res );
+                    }
+                });
+            }
+    </script>
+    <header>
+        <div class="container-xxl">
+            <p class='sitename'>#Распланируй</p>
+            <div class='row sitename'>
+                <div class="col">
+                    жизн<span style="display: inline-block" class='sitename spinningTextG'>ь</span>
+            </div>
+        </div>
+    </header>
+    <ul class="menu-main">
+        
+        <li><a href="" class="current">Добавить +</a></li>
+    </ul>
+    <div class='container' style='padding-top:20px'>
+        <form id="myform" onsubmit="addEvent();return false;">
+            <div class="row">
+              <div class="col">
+                <input rows="1" name='event_name' type="text" class="form-control" placeholder="Тема">
+              </div>
+            </div>
+            <div class="row">
+                <div class="col col-sm-12 col-lg-6">
+                    <p style="color:#6c757d">Выберите дату:
+                        <input name="event_date" style="color:#6c757d" class="form-control" type="date">
+                    </p>
+                </div>
+                <div class="col col-sm-12 col-lg-6">
+                    <p style="color:#6c757d">Назначьте время:
+                        <input name="event_time" style="color:#6c757d" class="form-control" type="time">
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <textarea rows="3" name='event_desc' type="text" class="form-control" placeholder="Описание"></textarea>
+                    <input style="margin:10px" class="btn btn-secondary" value='Создать' type="submit">  
+                    <a class="btn btn-secondary" onclick="get_list()" id='list_ev'>Показать список</a>   
+                </div>
+            </div>
+        </form>
+        
+        <div id="res">
+
+        </div>
+    </div>
+ </body>
+</html>
